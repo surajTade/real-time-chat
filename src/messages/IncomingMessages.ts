@@ -2,7 +2,7 @@ import z from "zod";
 
 export enum supportedMessages {
   JoinRoom = "JOIN_ROOM",
-  SendMessage = "SEND_MESSAGES",
+  SendMessage = "SEND_MESSAGE",
   UpvoteMessage = "UPVOTE_MESSAGE",
 }
 

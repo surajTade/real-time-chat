@@ -36,9 +36,14 @@ export class InMemoryStore implements Store {
     userId: UserId,
     name: string,
     message: string
-  ): string | null {
-    const room = this.getRoom(roomId);
-    if (!room) return null;
+  ): string {
+    let room = this.getRoom(roomId);
+    if (!room) {
+      this.initRoom(roomId);
+      this.logInfo(`RoomId ${roomId} does not exist, creating new room.`);
+    }
+
+    room = this.getRoom(roomId)!;
 
     const chatId = this.createChat(room, userId, name, message);
     return chatId;
@@ -114,5 +119,9 @@ export class InMemoryStore implements Store {
 
   private logError = (message: string): void => {
     console.error(`[ERROR] ${new Date().toISOString()}: ${message}`);
+  };
+
+  private logInfo = (message: string): void => {
+    console.log(`[INFO] ${new Date().toISOString()}: ${message}`);
   };
 }

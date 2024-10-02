@@ -38,7 +38,7 @@ export abstract class Store {
     userId: UserId,
     name: string,
     message: string
-  ): string | null;
+  ): string;
 
   /**
    * Upvotes a chat in the specified room.
