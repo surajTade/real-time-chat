@@ -81,7 +81,7 @@ export class InMemoryStore implements Store {
   };
 
   private findChatById = (room: Room, chatId: string) => {
-    const chat = room.chats.find(({ id }) => id === chatId);
+    const chat = room.chats.find(({ id }) => id == chatId);
     if (!chat) {
       this.logError(
         `Chat with ID ${chatId} does not exist in room ${room.roomId}.`
