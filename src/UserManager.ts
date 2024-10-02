@@ -44,6 +44,11 @@ export class UserManager {
 
     room.users.push({ userId, name, socket });
     console.info(`User ${name} added to room ${roomId}.`);
+
+    socket.on("close", (reasonCode, description) => {
+      console.log(new Date() + " User: " + userId + " disconnected.");
+      this.removeUser(roomId, userId);
+    });
   }
 
   removeUser(roomId: string, userId: UserId): void {
@@ -85,21 +90,19 @@ export class UserManager {
     );
   }
 
-  broadcast(roomId: string, userId: UserId, message: outgoingMessage): void {
-    const room = this.rooms.get(roomId);
-    const user = this.getUserInRoom(roomId, userId);
-
+  broadcast(roomId: string, reqUserId: UserId, message: outgoingMessage): void {
+    const user = this.getUserInRoom(roomId, reqUserId);
     if (!user) {
-      console.warn(`User ${userId} not found in room ${roomId}.`);
+      console.warn(`User ${reqUserId} not found in room ${roomId}.`);
       return;
     }
-
+    const room = this.rooms.get(roomId);
     if (!room) {
       console.warn(`Room ${roomId} not found for broadcast.`);
       return;
     }
 
-    room.users.forEach(({ socket }) => {
+    room.users.forEach(({ socket, userId }) => {
       try {
         socket.sendUTF(JSON.stringify({ message }));
       } catch (error) {

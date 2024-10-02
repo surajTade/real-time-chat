@@ -108,7 +108,8 @@ export class InMemoryStore implements Store {
   };
 
   private generateUniqueId = (): string => {
-    return `${this.getRandomSegment()}-${this.getRandomSegment()}-${this.getRandomSegment()}`;
+    return `${this.getRandomSegment()}`;
+    // return `${this.getRandomSegment()}-${this.getRandomSegment()}-${this.getRandomSegment()}`;
   };
 
   private getRandomSegment = (): string => {

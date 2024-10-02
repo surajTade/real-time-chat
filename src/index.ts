@@ -59,17 +59,10 @@ wsServer.on("request", (request) => {
       }
     }
   });
-
-  connection.on("close", (reasonCode, description) => {
-    console.log(
-      new Date() + " Peer " + connection.remoteAddress + " disconnected."
-    );
-  });
 });
 
 const messageHandler = (socket: connection, message: IncomingMessage) => {
   try {
-    console.log(message);
     switch (message.type) {
       case supportedMessages.JoinRoom:
         const joinPayload = message.payload;
@@ -82,8 +75,6 @@ const messageHandler = (socket: connection, message: IncomingMessage) => {
         break;
 
       case supportedMessages.SendMessage:
-        console.log("message sent");
-
         const sendPayload = message.payload;
         const user = userManager.getUserInRoom(
           sendPayload.roomId,
@@ -108,8 +99,6 @@ const messageHandler = (socket: connection, message: IncomingMessage) => {
                 upvotes: 0,
               },
             };
-            console.log("outgoing: ", sendPayload);
-
             userManager.broadcast(
               sendPayload.roomId,
               sendPayload.userId,
@@ -143,19 +132,18 @@ const messageHandler = (socket: connection, message: IncomingMessage) => {
         break;
 
       default:
-        console.log(message);
         console.warn(new Date() + " Unsupported message type");
     }
   } catch (error) {
-    console.error(new Date() + "Error handling message:", error);
+    console.error(new Date() + " Error handling message:", error);
   }
 };
 
 // Graceful shutdown
 process.on("SIGINT", () => {
-  console.log(new Date() + "Shutting down server...");
+  console.log(new Date() + " Shutting down server...");
   server.close(() => {
-    console.log(new Date() + "Server shut down.");
+    console.log(new Date() + " Server shut down.");
     process.exit(0);
   });
 });
